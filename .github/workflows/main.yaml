@@ -22,12 +22,17 @@ jobs:
 
       # Шаг 3: Установка зависимостей и сборка Angular-приложения
       - name: Build Angular app to prod
-        working-directory: github-pages-demo
         run: |
           npm install
-          npm run build -- --prod
+          npm run build:prod
 
-      # Шаг 4: Деплой на GitHub Pages
+      # Шаг 4: Очистка временных директорий
+      - name: Clean up worktree
+        run: |
+          git worktree prune
+          rm -rf .git/worktrees/*
+
+      # Шаг 5: Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
