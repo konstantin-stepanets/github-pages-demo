@@ -1,0 +1,36 @@
+name: Angular Build and Deploy
+
+on:
+  push:
+    branches:
+      - prod
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Шаг 1: Клонирование репозитория
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Шаг 2: Установка Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      # Шаг 3: Установка зависимостей и сборка Angular-приложения
+      - name: Build Angular app to prod
+        working-directory: github-pages-demo
+        run: |
+          npm install
+          npm run build -- --prod
+
+      # Шаг 4: Деплой на GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist/browser
+          branch: prod
+          token: ${{ secrets.GH_TOKEN }}
