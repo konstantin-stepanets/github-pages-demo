@@ -26,12 +26,14 @@ jobs:
           npm install
           npm run build:prod
 
-      # Step 4: Clean up worktree and detach prod
+      # Step 4: Clean up worktree and remove prod branch
       - name: Clean up worktree
         run: |
           git worktree prune
-          rm -rf .git/worktrees/*
           git branch -D prod || true
+          if git worktree list | grep -q "prod"; then
+            git worktree remove /home/runner/work/github-pages-demo/github-pages-demo --force
+          fi
 
       # Step 5: Debug worktree (optional)
       - name: Debug worktree
