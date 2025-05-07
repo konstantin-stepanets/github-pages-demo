@@ -10,29 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Шаг 1: Клонирование репозитория
+      # Step 1: Clone the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Шаг 2: Установка Node.js
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
-      # Шаг 3: Установка зависимостей и сборка Angular-приложения
+      # Step 3: Install dependencies and build the Angular app
       - name: Build Angular app to prod
         run: |
           npm install
           npm run build:prod
 
-      # Шаг 4: Очистка временных директорий
+      # Step 4: Clean up worktree and remove prod branch
       - name: Clean up worktree
         run: |
           git worktree prune
-          rm -rf .git/worktrees/*
+          git checkout --detach
+          git branch -D prod || true
+          if git worktree list | grep -q "/home/runner/work/github-pages-demo/github-pages-demo" && [ "$(git rev-parse --show-toplevel)" != "/home/runner/work/github-pages-demo/github-pages-demo" ]; then
+            git worktree remove /home/runner/work/github-pages-demo/github-pages-demo --force
+          fi
 
-      # Шаг 5: Деплой на GitHub Pages
+      # Step 5: Debug worktree (optional)
+      - name: Debug worktree
+        run: git worktree list
+
+      # Step 6: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
