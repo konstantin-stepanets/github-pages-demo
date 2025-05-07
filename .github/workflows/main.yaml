@@ -26,13 +26,19 @@ jobs:
           npm install
           npm run build:prod
 
-      # Шаг 4: Очистка временных директорий
+      # Шаг 4: Отладка текущей директории
+      - name: Debug current directory
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -la
+
+      # Шаг 5: Очистка временных директорий
       - name: Clean up worktree
         run: |
           git worktree prune
           rm -rf .git/worktrees/*
 
-      # Шаг 5: Деплой на GitHub Pages
+      # Шаг 6: Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
