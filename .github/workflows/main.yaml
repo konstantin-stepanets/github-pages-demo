@@ -32,7 +32,7 @@ jobs:
           git worktree prune
           git checkout --detach
           git branch -D prod || true
-          if git worktree list | grep -q "/home/runner/work/github-pages-demo/github-pages-demo"; then
+          if git worktree list | grep -q "/home/runner/work/github-pages-demo/github-pages-demo" && [ "$(git rev-parse --show-toplevel)" != "/home/runner/work/github-pages-demo/github-pages-demo" ]; then
             git worktree remove /home/runner/work/github-pages-demo/github-pages-demo --force
           fi
 
